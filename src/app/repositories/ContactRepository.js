@@ -109,7 +109,7 @@ class ContactRepository {
 
         const { name, email, phone, category_id } = body;
 
-        const [row] = await db.query(`
+        const [ row ] = await db.query(`
         INSERT INTO contacts (name, email, phone, category_id)
         VALUES ($1, $2, $3, $4)
         RETURNING *
