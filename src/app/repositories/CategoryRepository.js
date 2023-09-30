@@ -2,14 +2,21 @@ const db = require('../../database');
 
 class ContactRepository {
     async findAll() {
-    const rows = await db.query('SELECT * FROM categories;');
+        const rows = await db.query('SELECT * FROM categories;');
 
         return rows;
 
     };
 
+    async findById(id) {
+        const [ row ] = await db.query('SELECT * FROM categories WHERE categories.id = $1 ;', [id]);
+
+        return row;
+
+    };
+
     async findByName(name) {
-        const [ row ] = await db.query('SELECT * FROM categories WHERE categories.name = $1', [name]);
+        const [ row ] = await db.query('SELECT * FROM categories WHERE categories.name = $1 ;', [name]);
 
         return row;
 
