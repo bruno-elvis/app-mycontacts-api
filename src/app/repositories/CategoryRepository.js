@@ -1,14 +1,22 @@
 const db = require('../../database');
 
+const { validate } = require('uuid');
+
 class ContactRepository {
-    async findAll() {
-        const rows = await db.query('SELECT * FROM categories;');
+    async findAll(orden) {
+        const orderBy = orden?.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
+
+        const rows = await db.query(`SELECT * FROM categories ORDER BY categories.name ${orderBy};`);
 
         return rows;
 
     };
 
     async findById(id) {
+        const idIsValid = validate(id);
+
+        if (!idIsValid) return idIsValid;
+
         const [ row ] = await db.query('SELECT * FROM categories WHERE categories.id = $1 ;', [id]);
 
         return row;
@@ -23,9 +31,16 @@ class ContactRepository {
     };
 
     async create(name) {
-        const [ row ] = await db.query(`INSERT INTO categories (name) 
-                                        VALUES ($1) 
+        const [ row ] = await db.query(`INSERT INTO categories (name)
+                                        VALUES ($1)
                                         RETURNING * `, [name]);
+
+        return row;
+
+    };
+
+    async update(id, name) {
+        const [ row ] = db.query(`UPDATE categories SET name = $1 WHERE $2 ;`, [name, id]);
 
         return row;
 

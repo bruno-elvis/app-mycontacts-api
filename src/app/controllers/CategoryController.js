@@ -2,12 +2,14 @@ const CategoryRepository = require('../repositories/CategoryRepository');
 
 class CategoryController {
     async index(request, response) {
-        const categories = await CategoryRepository.findAll();
+        const { orden } = request.query;
+
+        const categories = await CategoryRepository.findAll(orden);
 
         response.json(categories);
 
     };
-    
+
     async show(request, response) {
         const { id } = request.params;
 
@@ -19,9 +21,9 @@ class CategoryController {
         };
 
         response.json(category);
-        
+
     };
-    
+
     async store(request, response) {
         const { name } = request.body;
 
@@ -41,7 +43,24 @@ class CategoryController {
 
     };
 
-    update() {
+    async update(request, response) {
+        const { id } = request.params;
+
+        const { name } = request.body;
+
+        const categoryIdExists = await CategoryRepository.findById(id);
+
+        if (!categoryIdExists) {
+            return response.status(404).json({ error: 'Category not found' });
+
+        } else if (categoryIdExists.name === name) {
+            return response.status(404).json({ error: 'This name is already in use' });
+
+        };
+
+        const category = await CategoryRepository.update(id, name);
+
+        return response.json(category);
 
     };
 

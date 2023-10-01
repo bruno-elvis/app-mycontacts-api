@@ -1,4 +1,4 @@
-const { v4 } = require('uuid');
+const { v4, validate } = require('uuid');
 
 const db = require('../../database');
 
@@ -49,6 +49,11 @@ class ContactRepository {
     };
 
     async findById(id) {
+
+        const idIsValid = validate(id);
+
+        if (!idIsValid) return idIsValid;
+
         const [ row ] = await db.query('SELECT * FROM contacts WHERE contacts.id = $1;', [id]);
 
         return row;
@@ -104,10 +109,8 @@ class ContactRepository {
 
     };
 
-    async create(body) {
+    async create(name, email, phone, category_id) {
         /* IMPLEMENTAÇÃO COM DB POSTGRES */
-
-        const { name, email, phone, category_id } = body;
 
         const [ row ] = await db.query(`
         INSERT INTO contacts (name, email, phone, category_id)

@@ -25,17 +25,19 @@ class ContactController {
     };
 
     async store(request, response) {
-        const contactExists = await ContactsRepository.findByEmail(request.body.email);
+        const { name, email, phone, category_id } = request.body;
 
-        if (!request.body.name) {
+        const contactEmailExists = await ContactsRepository.findByEmail(email);
+
+        if (!name) {
             return response.status(400).json({ error: 'Name is required' });
 
-        } else if (contactExists) {
+        } else if (contactEmailExists) {
             return response.status(400).json({ error: 'This e-mail is already in use' });
 
         };
 
-        const contact = await ContactsRepository.create(request.body);
+        const contact = await ContactsRepository.create(name, email, phone, category_id);
 
         response.json(contact);
     };
@@ -45,13 +47,13 @@ class ContactController {
 
         const { name, email, phone, category_id } = request.body;
 
-        const contactExists = await ContactsRepository.findById(id);
+        const contactIdExists = await ContactsRepository.findById(id);
 
         const contactEmailExists = await ContactsRepository.findByEmail(email);
 
         if (!name) return response.status(400).json({ error: 'Name is required' });
 
-        if (!contactExists) {
+        if (!contactIdExists) {
             return response.status(404).json({ error: 'Contact not found' });
 
         } else if (contactEmailExists && contactEmailExists.id !== id) {
