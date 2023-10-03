@@ -48,12 +48,16 @@ class CategoryController {
 
         const { name } = request.body;
 
+        if (!name) return response.status(400).json({ error: 'Name is required' });
+
         const categoryIdExists = await CategoryRepository.findById(id);
+
+        const categoryNameExists = await CategoryRepository.findByName(name);
 
         if (!categoryIdExists) {
             return response.status(404).json({ error: 'Category not found' });
 
-        } else if (categoryIdExists.name === name) {
+        } else if (categoryNameExists && categoryNameExists.id !== id) {
             return response.status(404).json({ error: 'This name is already in use' });
 
         };

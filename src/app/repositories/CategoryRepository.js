@@ -40,7 +40,10 @@ class ContactRepository {
     };
 
     async update(id, name) {
-        const [ row ] = db.query(`UPDATE categories SET name = $1 WHERE $2 ;`, [name, id]);
+        const [ row ] = await db.query(`UPDATE categories
+                                SET name = $1
+                                WHERE categories.id = $2
+                                RETURNING * `, [name, id]);
 
         return row;
 

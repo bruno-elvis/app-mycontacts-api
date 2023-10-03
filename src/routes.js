@@ -16,5 +16,6 @@ route.put('/contacts/:id', ContactController.update);
 route.get('/categories', CategoryController.index);
 route.get('/categories/:id', CategoryController.show);
 route.post('/categories', CategoryController.store);
+route.put('/categories/:id', CategoryController.update);
 
 module.exports = route;
