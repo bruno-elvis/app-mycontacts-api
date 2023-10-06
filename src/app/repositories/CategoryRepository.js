@@ -49,6 +49,15 @@ class ContactRepository {
 
     };
 
+    async delete(id) {
+        const idIsValid = validate(id);
+
+        if (!idIsValid) return idIsValid;
+
+        await db.query('DELETE FROM categories WHERE categories.id = $1;', [id]);
+
+    };
+
 };
 
 module.exports = new ContactRepository();

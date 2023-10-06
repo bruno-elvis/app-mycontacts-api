@@ -96,7 +96,11 @@ class ContactRepository {
     };
 
     async delete(id) {
-        console.log(await db.query('DELETE FROM contacts WHERE contacts.id = $1;', [id]));
+        const idIsValid = validate(id);
+
+        if (!idIsValid) return idIsValid;
+
+        await db.query('DELETE FROM contacts WHERE contacts.id = $1;', [id]);
 
         /* IMPLEMENTAÇÃO COM BASE MOCK
         return new Promise((resolve, reject) => {
