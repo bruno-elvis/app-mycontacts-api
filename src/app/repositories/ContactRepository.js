@@ -42,7 +42,10 @@ class ContactRepository {
     async findAll(orden) {
         const orderBy = orden?.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
 
-        const rows = await db.query(`SELECT * FROM contacts ORDER BY contacts.name ${orderBy};`);
+        const rows = await db.query(`SELECT con.id, con.name, con.email, con.phone, cat.name category
+                                    FROM contacts con
+                                    LEFT JOIN categories cat ON (con.category_id = cat.id)
+                                    ORDER BY con.name ${orderBy};`);
 
         return rows;
 
@@ -54,7 +57,10 @@ class ContactRepository {
 
         if (!idIsValid) return idIsValid;
 
-        const [ row ] = await db.query('SELECT * FROM contacts WHERE contacts.id = $1;', [id]);
+        const [ row ] = await db.query(`SELECT con.id, con.name, con.email, con.phone, cat.name category
+                                        FROM contacts con
+                                        INNER JOIN categories cat ON (con.category_id = cat.id)
+                                        WHERE con.id = $1;`, [id]);
 
         return row;
 
