@@ -1,81 +1,77 @@
 const ContactsRepository = require('../repositories/ContactRepository');
 
 class ContactController {
-    async index(request, response) {
-        const { orden } = request.query;
+  async index(request, response) {
+    const { orden } = request.query;
 
-        const contacts = await ContactsRepository.findAll(orden);
+    const contacts = await ContactsRepository.findAll(orden);
 
-        response.json(contacts);
+    response.json(contacts);
+  }
 
-    };
+  async show(request, response) {
+    const { id } = request.params;
 
-    async show(request, response) {
-        const { id } = request.params;
+    const contact = await ContactsRepository.findById(id);
 
-        const contact = await ContactsRepository.findById(id);
+    if (!contact) {
+      return response.status(404).json({ error: 'Contact not found' });
+    }
 
-        if (!contact) {
-            return response.status(404).json({ error: 'Contact not found' });
+    response.json(contact);
+  }
 
-        };
+  async store(request, response) {
+    const {
+      name, email, phone, category_id,
+    } = request.body;
 
-        response.json(contact);
+    const contactEmailExists = await ContactsRepository.findByEmail(email);
 
-    };
+    if (!name) {
+      return response.status(400).json({ error: 'Name is required' });
+    } if (contactEmailExists) {
+      return response.status(400).json({ error: 'This e-mail is already in use' });
+    }
 
-    async store(request, response) {
-        const { name, email, phone, category_id } = request.body;
+    const contact = await ContactsRepository.create(name, email, phone, category_id);
 
-        const contactEmailExists = await ContactsRepository.findByEmail(email);
+    response.json(contact);
+  }
 
-        if (!name) {
-            return response.status(400).json({ error: 'Name is required' });
+  async update(request, response) {
+    const { id } = request.params;
 
-        } else if (contactEmailExists) {
-            return response.status(400).json({ error: 'This e-mail is already in use' });
+    const {
+      name, email, phone, category_id,
+    } = request.body;
 
-        };
+    const contactIdExists = await ContactsRepository.findById(id);
 
-        const contact = await ContactsRepository.create(name, email, phone, category_id);
+    const contactEmailExists = await ContactsRepository.findByEmail(email);
 
-        response.json(contact);
-    };
+    if (!name) return response.status(400).json({ error: 'Name is required' });
 
-    async update(request, response) {
-        const { id } = request.params;
+    if (!contactIdExists) {
+      return response.status(404).json({ error: 'Contact not found' });
+    } if (contactEmailExists && contactEmailExists.id !== id) {
+      return response.status(400).json({ error: 'This e-mail is already in use' });
+    }
 
-        const { name, email, phone, category_id } = request.body;
+    const contactEdit = await ContactsRepository.update({
+      id, name, email, phone, category_id,
+    });
 
-        const contactIdExists = await ContactsRepository.findById(id);
+    response.json(contactEdit);
+  }
 
-        const contactEmailExists = await ContactsRepository.findByEmail(email);
+  async delete(request, response) {
+    const { id } = request.params;
 
-        if (!name) return response.status(400).json({ error: 'Name is required' });
+    await ContactsRepository.delete(id);
 
-        if (!contactIdExists) {
-            return response.status(404).json({ error: 'Contact not found' });
-
-        } else if (contactEmailExists && contactEmailExists.id !== id) {
-            return response.status(400).json({ error: 'This e-mail is already in use' });
-
-        };
-
-        const contactEdit = await ContactsRepository.update({ id, name, email, phone, category_id });
-
-        response.json(contactEdit);
-
-    };
-
-    async delete(request, response) {
-        const { id } = request.params;
-
-        await ContactsRepository.delete(id);
-
-        response.sendStatus(204);
-
-    };
-
-};
+    response.sendStatus(204);
+  }
+}
 
 module.exports = new ContactController();

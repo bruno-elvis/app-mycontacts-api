@@ -15,3 +15,7 @@ CREATE TABLE IF NOT EXISTS contacts (
     category_id UUID,
     FOREIGN KEY(category_id) REFERENCES categories (id)
 );
+
+/* consulta sql para teste */
+
+select con.name as nome, con.email, cat.name as categoria from contacts con left join categories cat on (con.category_id = cat.id);
