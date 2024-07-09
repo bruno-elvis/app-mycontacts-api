@@ -7,7 +7,8 @@ class ContactController {
     const contacts = await ContactsRepository.findAll(orden);
 
     response.json(contacts);
-  }
+
+  };
 
   async show(request, response) {
     const { id } = request.params;
