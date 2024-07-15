@@ -39,7 +39,7 @@ class CategoryController {
 
         const category = await CategoryRepository.create(name);
 
-        response.json(category);
+        response.status(204).json(category);
 
     };
 
@@ -74,6 +74,7 @@ class CategoryController {
         await CategoryRepository.delete(id);
 
         response.sendStatus(204);
+
     };
 
 };

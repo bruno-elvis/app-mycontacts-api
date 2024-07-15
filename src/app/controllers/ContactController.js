@@ -17,10 +17,12 @@ class ContactController {
 
     if (!contact) {
       return response.status(404).json({ error: 'Contact not found' });
-    }
+
+    };
 
     response.json(contact);
-  }
+
+  };
 
   async store(request, response) {
     const {
@@ -31,14 +33,17 @@ class ContactController {
 
     if (!name) {
       return response.status(400).json({ error: 'Name is required' });
+
     } if (contactEmailExists) {
       return response.status(400).json({ error: 'This e-mail is already in use' });
-    }
+
+    };
 
     const contact = await ContactsRepository.create(name, email, phone, category_id);
 
-    response.json(contact);
-  }
+    response.status(204).json(contact);
+
+  };
 
   async update(request, response) {
     const { id } = request.params;
@@ -55,16 +60,20 @@ class ContactController {
 
     if (!contactIdExists) {
       return response.status(404).json({ error: 'Contact not found' });
+
     } if (contactEmailExists && contactEmailExists.id !== id) {
       return response.status(400).json({ error: 'This e-mail is already in use' });
-    }
+
+    };
 
     const contactEdit = await ContactsRepository.update({
       id, name, email, phone, category_id,
+
     });
 
     response.json(contactEdit);
-  }
+
+  };
 
   async delete(request, response) {
     const { id } = request.params;
@@ -72,7 +81,9 @@ class ContactController {
     await ContactsRepository.delete(id);
 
     response.sendStatus(204);
-  }
-}
+
+  };
+
+};
 
 module.exports = new ContactController();

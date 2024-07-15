@@ -4,7 +4,9 @@ module.exports = {
     es2021: true,
     node: true,
   },
+
   extends: 'airbnb-base',
+
   overrides: [
     {
       env: {
@@ -18,9 +20,14 @@ module.exports = {
       },
     },
   ],
+
   parserOptions: {
     ecmaVersion: 'latest',
   },
+
   rules: {
+    'class-methods-use-this': false,
+
   },
+
 };
