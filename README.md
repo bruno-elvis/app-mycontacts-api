@@ -5,7 +5,6 @@
     <h1 align="center">API-CONTACTS-JS</h1>
 </p>
 <p align="center">
-    <em> `slogan`</em>
 </p>
 <p align="center">
 	<img src="https://img.shields.io/github/license/Bruno-Elvis/api-contacts-js?style=flat&color=0080ff" alt="license">
