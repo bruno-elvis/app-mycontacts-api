@@ -52,11 +52,6 @@ class ContactController {
 
     };
 
-    if (category_id && !isValidUUID(id)) {
-        return response.status(400).json({ error: 'Invalid category' });
-
-    };
-
     const contact = await ContactsRepository.create(name, email || null, phone, category_id || null);
 
     response.status(201).json(contact);
