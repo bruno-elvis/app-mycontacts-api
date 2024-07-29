@@ -57,7 +57,7 @@ class ContactRepository {
 
         if (!idIsValid) return idIsValid;
 
-        const [ row ] = await db.query(`SELECT con.id, con.name, con.email, con.phone, cat.name category
+        const [ row ] = await db.query(`SELECT con.id, con.name, con.email, con.phone, cat.name category, cat.id category_id
                                         FROM contacts con
                                         INNER JOIN categories cat ON (con.category_id = cat.id)
                                         WHERE con.id = $1;`, [id]);
