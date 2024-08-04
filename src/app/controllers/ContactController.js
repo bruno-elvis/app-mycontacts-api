@@ -36,7 +36,6 @@ class ContactController {
       name, email, phone, category_id,
     } = request.body;
 
-
     if (!name) {
         return response.status(400).json({ error: 'Name is required' });
 
